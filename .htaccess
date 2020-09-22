@@ -1,0 +1,5 @@
+Options -Indexes
+ErrorDocument 404 /404.html
+
+RewriteEngine On
+RewriteRule "^api/v1/(.+)$" "/api.php?path=$1" [L]

@@ -1,0 +1,10 @@
+{
+    "require": {
+        "google/apiclient": "^2.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "DAFME\\Covid\\": "inc/"
+        }
+    }
+}
