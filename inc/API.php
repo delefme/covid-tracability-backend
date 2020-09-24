@@ -39,8 +39,8 @@ class API {
 
     header('Content-Type: application/json');
 
-    if (isset($conf['frontendUrl']) && !empty($conf['frontendUrl']))
-      header('Access-Control-Allow-Origin: '.$conf['frontendUrl']);
+    if (isset($conf['allowedOrigin']) && !empty($conf['allowedOrigin']))
+      header('Access-Control-Allow-Origin: '.$conf['allowedOrigin']);
 
     $parts = explode('/', $path);
     $method = $parts[0] ?? '';

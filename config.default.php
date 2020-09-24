@@ -28,4 +28,8 @@ $conf['fullPath'] = '';
 
 // Lloc on s'allotja el web (frontend)
 //   Exemple: https://covid.fme.upc.edu/
-$conf['homeUrl'] = '';
+$conf['frontendUrl'] = '';
+
+// Valor del header Access-Control-Allow-Origin per les peticions a l'API.
+// Per defecte és el valor de la variable $conf['homeUrl']
+$conf['allowedOrigin'] = $conf['homeUrl'];
