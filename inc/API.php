@@ -50,13 +50,23 @@ class API {
     return $json;
   }
 
+  private static function setCORSHeaders() {
+    global $conf;
+    if ((isset($conf['allowAllOrigins']) && $conf['allowAllOrigins']) ||
+        (isset($conf['allowedOrigins']) &&
+        isset($_SERVER['HTTP_ORIGIN']) &&
+        in_array($_SERVER['HTTP_ORIGIN'], $conf['allowedOrigins']))) {
+      header('Access-Control-Allow-Origin: '.($_SERVER['HTTP_ORIGIN'] ?? '*'));
+      header('Access-Control-Allow-Credentials: true');
+    }
+  }
+
+
   public static function process($path) {
     global $conf;
 
     header('Content-Type: application/json');
-
-    if (isset($conf['allowedOrigin']) && !empty($conf['allowedOrigin']))
-      header('Access-Control-Allow-Origin: '.$conf['allowedOrigin']);
+    self::setCORSHeaders();
 
     $parts = explode('/', $path);
     $method = $parts[0] ?? '';

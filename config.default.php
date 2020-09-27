@@ -30,6 +30,12 @@ $conf['fullPath'] = '';
 //   Exemple: https://covid.fme.upc.edu/
 $conf['frontendUrl'] = '';
 
-// Valor del header Access-Control-Allow-Origin per les peticions a l'API.
-// Per defecte és el valor de la variable $conf['homeUrl']
-$conf['allowedOrigin'] = $conf['homeUrl'];
+// Llistat d'orígens permesos per interactuar amb l'API.
+//
+// NOTA: És important que els valors de l'array no acabin amb un "/" final.
+//   Exemple: ['https://covid.fme.upc.edu']
+$conf['allowedOrigins'] = [];
+
+// Ignorar la llista d'orígens permesos i permetre a qualsevol pàgina web
+// interactuar amb l'API
+$conf['allowAllOrigins'] = false;
