@@ -4,6 +4,7 @@ namespace DAFME\Covid;
 class API {
   private static function returnJSON($array) {
     echo json_encode($array);
+    exit();
   }
 
   public static function returnError($errorMessage = 'Unexpected error') {
@@ -30,8 +31,19 @@ class API {
   private static function checkSignInStatus() {
     if (!Users::isSignedIn()) {
       self::returnError('The user hasn\'t signed in.');
-      exit();
     }    
+  }
+
+  private static function getJSONBody() {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST')
+      self::returnError('This action requires using the POST method.');
+
+    $rawBody = file_get_contents('php://input');
+    $json = json_decode($rawBody, true);
+    if (json_last_error() !== JSON_ERROR_NONE)
+      self::returnError('The request body is malformed.');
+
+    return $json;
   }
 
   public static function process($path) {
@@ -78,10 +90,41 @@ class API {
 
       case 'getUserSubjects':
         self::checkSignInStatus();
-        // @TODO: Implement this method
+        $subjects = Subjects::getUserSubjects();
+
+        if ($subjects === false)
+          self::returnError();
+
+        self::returnPayload([
+          'subjects' => $subjects
+        ]);
         break;
 
-      case 'setUserSubjects':
+      case 'addUserSubject':
+        self::checkSignInStatus();
+        $body = self::getJSONBody();
+        if (!isset($body['subject']))
+          self::returnError();
+
+        if (Subjects::addUserSubject((int)$body['subject']))
+          self::returnOk();
+        else
+          self::returnError();
+        break;
+
+      case 'removeUserSubject':
+        self::checkSignInStatus();
+        $body = self::getJSONBody();
+        if (!isset($body['subject']))
+          self::returnError();
+
+        if (Subjects::removeUserSubject((int)$body['subject']))
+          self::returnOk();
+        else
+          self::returnError();
+        break;
+
+      case 'removeUserSubject':
         self::checkSignInStatus();
         // @TODO: Implement this method
         break;

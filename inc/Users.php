@@ -2,7 +2,7 @@
 namespace DAFME\Covid;
 
 class Users {
-  private static function getUserId($sub) {
+  private static function getUserIdFromSub($sub) {
     global $con;
     $query = $con->prepare('SELECT id FROM users WHERE sub = ?');
     if (!$query->execute([$sub]))
@@ -15,7 +15,7 @@ class Users {
     return $row['id'] ?? false;
   }
 
-  public static function add($sub, $email) {
+  public static function add($sub, $email): int {
     global $con;
     $query = $con->prepare('INSERT INTO users (sub, email) VALUES (?, ?)');
     if (!$query->execute([$sub, $email]))
@@ -24,10 +24,10 @@ class Users {
     return $con->lastInsertId();
   }
 
-  public static function signIn($sub, $email) {
+  public static function signIn($sub, $email): bool {
     global $_SESSION;
 
-    $userId = self::getUserId($sub);
+    $userId = self::getUserIdFromSub($sub);
 
     if ($userId === false)
       $userId = self::add($sub, $email);
@@ -39,13 +39,18 @@ class Users {
     return true;
   }
 
-  public static function signOut() {
+  public static function signOut(): void {
     global $_SESSION;
     unset($_SESSION['userId']);
   }
 
-  public static function isSignedIn() {
+  public static function isSignedIn(): bool {
     global $_SESSION;
     return isset($_SESSION['userId']);
+  }
+
+  public static function getUserId(): int {
+    global $_SESSION;
+    return (self::isSignedIn() ? $_SESSION['userId'] : -1);
   }
 }
