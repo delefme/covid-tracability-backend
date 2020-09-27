@@ -21,4 +21,13 @@ CREATE TABLE user_subjects (
   subject_id INT NOT NULL
 );
 
+CREATE TABLE classes (
+  id INT NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY(id),
+  calendar_name VARCHAR(100) NOT NULL,
+  room VARCHAR(10) NOT NULL,
+  begins DATETIME NOT NULL,
+  ends DATETIME NOT NULL
+);
+
 -- @TODO: Add form completion log table
