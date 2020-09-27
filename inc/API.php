@@ -34,9 +34,13 @@ class API {
     }    
   }
 
+  private static function checkRequestMethod(string $method) {
+    if ($_SERVER['REQUEST_METHOD'] !== $method)
+      self::returnError('This action requires using the '.$method.' method.');
+  }
+
   private static function getJSONBody() {
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST')
-      self::returnError('This action requires using the POST method.');
+    self::checkRequestMethod('POST');
 
     $rawBody = file_get_contents('php://input');
     $json = json_decode($rawBody, true);
@@ -59,6 +63,7 @@ class API {
 
     switch ($method) {
       case 'getAuthUrl':
+        self::checkRequestMethod('GET');
         $auth = new Auth();
         self::returnPayload([
           'url' => $auth->getAuthUrl()
@@ -66,6 +71,7 @@ class API {
         break;
 
       case 'isSignedIn':
+        self::checkRequestMethod('GET');
         $isSignedIn = \DAFME\Covid\Users::isSignedIn();
         self::returnPayload([
           'signedIn' => $isSignedIn
@@ -73,11 +79,13 @@ class API {
         break;
 
       case 'signOut':
+        self::checkRequestMethod('POST');
         \DAFME\Covid\Users::signOut();
         self::returnOk();
         break;
 
       case 'getAllSubjects':
+        self::checkRequestMethod('GET');
         $subjects = Subjects::getAll();
 
         if ($subjects === false)
@@ -89,6 +97,7 @@ class API {
         break;
 
       case 'getUserSubjects':
+        self::checkRequestMethod('GET');
         self::checkSignInStatus();
         $subjects = Subjects::getUserSubjects();
 
@@ -122,11 +131,6 @@ class API {
           self::returnOk();
         else
           self::returnError();
-        break;
-
-      case 'removeUserSubject':
-        self::checkSignInStatus();
-        // @TODO: Implement this method
         break;
 
       case 'getClasses':
