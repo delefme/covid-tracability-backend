@@ -144,8 +144,12 @@ class API {
         break;
 
       case 'getClasses':
-        self::checkSignInStatus();
-        // @TODO: Implement this method
+        $body = self::getJSONBody();
+        $response = Classes::handleAPIGetClasses($body);
+        if ($response === false)
+          self::returnError();
+        else
+          self::returnPayload($response);
         break;
 
       case 'setClassState':

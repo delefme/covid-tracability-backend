@@ -11,13 +11,15 @@ CREATE TABLE subjects (
   id INT NOT NULL AUTO_INCREMENT,
   PRIMARY KEY(id),
   friendly_name VARCHAR(100) NOT NULL UNIQUE, -- Nom que es mostra al web
-  calendar_name VARCHAR(100) NOT NULL -- Nom al calendari de la FME
+  calendar_name VARCHAR(100) NOT NULL, -- Nom al calendari de la FME
+  INDEX(calendar_name)
 );
 
 CREATE TABLE user_subjects (
   id INT NOT NULL AUTO_INCREMENT,
   PRIMARY KEY(id),
   user_id INT NOT NULL,
+  INDEX(user_id),
   subject_id INT NOT NULL
 );
 
@@ -25,9 +27,12 @@ CREATE TABLE classes (
   id INT NOT NULL AUTO_INCREMENT,
   PRIMARY KEY(id),
   calendar_name VARCHAR(100) NOT NULL,
+  INDEX(calendar_name),
   room VARCHAR(10) NOT NULL,
   begins DATETIME NOT NULL,
-  ends DATETIME NOT NULL
+  INDEX(begins),
+  ends DATETIME NOT NULL,
+  INDEX(ends)
 );
 
 -- @TODO: Add form completion log table
