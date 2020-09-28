@@ -42,3 +42,7 @@ $conf['allowAllOrigins'] = false;
 
 // URL del repositori de GitHub.
 $conf['gitHubRepo'] = 'https://github.com/delefme/covid-tracability-backend';
+
+// Configurar si estem a producció ("false" vol dir que estem en un servidor
+// de desenvolupament local)
+$conf['isProduction'] = true;
