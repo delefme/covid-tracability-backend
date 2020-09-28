@@ -39,3 +39,6 @@ $conf['allowedOrigins'] = [];
 // Ignorar la llista d'orígens permesos i permetre a qualsevol pàgina web
 // interactuar amb l'API
 $conf['allowAllOrigins'] = false;
+
+// URL del repositori de GitHub.
+$conf['gitHubRepo'] = 'https://github.com/delefme/covid-tracability-backend';
