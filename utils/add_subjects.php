@@ -27,11 +27,16 @@ $con->beginTransaction();
 
 $query = $con->prepare('INSERT INTO subjects (friendly_name, calendar_name) VALUES (:friendly_name, :calendar_name)');
 foreach ($subjects as $subject) {
-  if (!isset($subject['friendly_name']) || !isset($subject['calendar_name']) || empty($subject['friendly_name']) || empty($subject['calendar_name'])) {
+  if (!isset($subject['calendar_name']) || empty($subject['calendar_name'])) {
     $con->rollback();
-    echo "The JSON file passed is malformed. It should be an array consisting of objects which have non-empty 'friendly_name' and 'calendar_name' properties.\n";
+    echo "The JSON file passed is malformed. It should be an array consisting of objects which have a non-empty 'calendar_name' property and optionally a 'friendly_name' property.\n";
     exit();
   }
+
+  if (!isset($subject['friendly_name']) || empty($subject['friendly_name']))
+    $subject['friendly_name'] = $subject['calendar_name'];
+
+  $subject['calendar_name'] = mb_strtolower($subject['calendar_name']);
 
   if (!$query->execute($subject)) {
     echo "An error occurred while adding the subject '".$subject['friendly_name']."' to the database. This doesn't affect the other subjects.\n";
