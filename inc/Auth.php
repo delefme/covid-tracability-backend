@@ -13,6 +13,9 @@ class Auth {
     $this->client->addScope('https://www.googleapis.com/auth/userinfo.email');
     $this->client->setRedirectUri($conf['fullPath'].'oauth2callback.php');
     $this->client->setAccessType('online');
+
+    // Sometimes the server is slightly out of sync with the OAuth2 server.
+    \Firebase\JWT\JWT::$leeway = 5;
   }
 
   public function getAuthUrl() {

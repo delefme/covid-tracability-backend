@@ -15,7 +15,7 @@ $con = new PDO('mysql:host='.$conf['db']['host'].';dbname='.$conf['db']['databas
 
 // Session settings
 if(PHP_VERSION_ID < 70300) {
-  session_set_cookie_params(0, ($conf['path'] ?? '/').'; samesite=None', $_SERVER['HTTP_HOST'], $conf['isProduction'], true);
+  session_set_cookie_params(0, ($conf['path'] ?? '/').'; SameSite=None', $_SERVER['HTTP_HOST'], $conf['isProduction'], true);
 } else {
   session_set_cookie_params([
     'lifetime' => 0,
