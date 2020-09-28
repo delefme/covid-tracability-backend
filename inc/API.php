@@ -143,13 +143,15 @@ class API {
           self::returnError();
         break;
 
-      case 'getClasses':
-        $body = self::getJSONBody();
-        $response = Classes::handleAPIGetClasses($body);
-        if ($response === false)
+      case 'getCurrentClasses':
+        self::checkRequestMethod('GET');
+        $classes = Classes::getCurrentClasses();
+        if ($classes === false)
           self::returnError();
         else
-          self::returnPayload($response);
+          self::returnPayload([
+            'classes' => $classes
+          ]);
         break;
 
       case 'setClassState':

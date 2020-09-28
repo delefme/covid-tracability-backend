@@ -37,26 +37,4 @@ class Classes {
 
     return $classes;
   }
-
-  public static function handleAPIGetClasses($body) {
-    if (!isset($body['type']))
-      return false;
-
-    $response = [];
-
-    switch ($body['type']) {
-      case 'current':
-        $classes = self::getCurrentClasses();
-        if ($classes === false)
-          return false;
-
-        $response['classes'] = $classes;
-        break;
-
-      default:
-        return false;
-    }
-
-    return $response;
-  }
 }
