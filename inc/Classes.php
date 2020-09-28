@@ -15,8 +15,8 @@ class Classes {
           ON s.id = u_s.subject_id
         ' : '').
         'WHERE
-          c.begins < NOW() AND
-          c.ends > NOW()'.($isSignedIn ? ' AND
+          c.begins < UNIX_TIMESTAMP() AND
+          c.ends > UNIX_TIMESTAMP()'.($isSignedIn ? ' AND
           (
             u_s.user_id = :user_id OR
             u_s.subject_id IS NULL

@@ -29,9 +29,9 @@ CREATE TABLE classes (
   calendar_name VARCHAR(100) NOT NULL,
   INDEX(calendar_name),
   room VARCHAR(10) NOT NULL,
-  begins DATETIME NOT NULL,
+  begins INT NOT NULL, -- UNIX timestamp de l'hora d'inici
   INDEX(begins),
-  ends DATETIME NOT NULL,
+  ends INT NOT NULL, -- UNIX timestamp de l'hora de fi
   INDEX(ends)
 );
 
