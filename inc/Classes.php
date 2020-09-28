@@ -29,7 +29,7 @@ class Classes {
     $classes = $query->fetchAll(\PDO::FETCH_ASSOC);
 
     foreach ($classes as &$class) {
-      if ($isSignedIn)
+      if (!$isSignedIn)
         $class['user_subject_id'] = null;
 
       $class['user_selected'] = $class['user_subject_id'] !== null;
