@@ -2,6 +2,11 @@
 namespace DAFME\Covid;
 
 class Classes {
+  // Marge en segons per seguir retornant una assignatura abans o després que
+  // acabi, quan s'obtenen les classes actuals.
+  const MARGIN_BEGINS = 0*60;
+  const MARGIN_ENDS = 0*60;
+
   public static function getCurrentClasses() {
     global $con;
 
@@ -15,8 +20,8 @@ class Classes {
           ON s.id = u_s.subject_id
         ' : '').
         'WHERE
-          c.begins < UNIX_TIMESTAMP() AND
-          c.ends > UNIX_TIMESTAMP()'.($isSignedIn ? ' AND
+          c.begins - '.self::MARGIN_BEGINS.' < UNIX_TIMESTAMP() AND
+          c.ends + '.self::MARGIN_ENDS.' > UNIX_TIMESTAMP()'.($isSignedIn ? ' AND
           (
             u_s.user_id = :user_id OR
             u_s.subject_id IS NULL
