@@ -20,7 +20,8 @@ class Classes {
           (
             u_s.user_id = :user_id OR
             u_s.subject_id IS NULL
-          )': '');
+          )': '').'
+        ORDER BY '.($isSignedIn ? 'u_s.subject_id IS NULL, ' : '').'s.friendly_name ASC';
     $query = $con->prepare($sentence);
     
     if (!$query->execute(($isSignedIn ? ['user_id' => Users::getUserId()] : [])))
