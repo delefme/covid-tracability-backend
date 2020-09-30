@@ -12,9 +12,9 @@ class Classes {
 
     $isSignedIn = Users::isSignedIn();
 
-    $sentence = 'SELECT c.id, c.calendar_name, c.room, c.begins, c.ends, s.id subject_id, s.friendly_name'.($isSignedIn ? ', u_s.id user_subject_id' : '').'
+    $sentence = 'SELECT c.id, c.calendar_name, c.room, c.begins, c.ends, c.calendar_name, s.id subject_id, s.friendly_name'.($isSignedIn ? ', u_s.id user_subject_id' : '').'
         FROM classes c
-        INNER JOIN subjects s
+        LEFT OUTER JOIN subjects s
           ON c.calendar_name = s.calendar_name
         '.($isSignedIn ? 'LEFT OUTER JOIN user_subjects u_s
           ON s.id = u_s.subject_id
@@ -26,7 +26,7 @@ class Classes {
             u_s.user_id = :user_id OR
             u_s.subject_id IS NULL
           )': '').'
-        ORDER BY '.($isSignedIn ? 'u_s.subject_id IS NULL, ' : '').'s.friendly_name ASC';
+        ORDER BY s.id IS NULL, '.($isSignedIn ? 'u_s.subject_id IS NULL, ' : '').'s.friendly_name ASC';
     $query = $con->prepare($sentence);
     
     if (!$query->execute(($isSignedIn ? ['user_id' => Users::getUserId()] : [])))
