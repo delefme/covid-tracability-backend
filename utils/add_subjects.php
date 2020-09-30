@@ -36,8 +36,6 @@ foreach ($subjects as $subject) {
   if (!isset($subject['friendly_name']) || empty($subject['friendly_name']))
     $subject['friendly_name'] = $subject['calendar_name'];
 
-  $subject['calendar_name'] = mb_strtolower($subject['calendar_name']);
-
   if (!$query->execute($subject)) {
     echo "An error occurred while adding the subject '".$subject['friendly_name']."' to the database. This doesn't affect the other subjects.\n";
   }
