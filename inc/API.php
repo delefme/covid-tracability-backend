@@ -145,7 +145,22 @@ class API {
 
       case 'getCurrentClasses':
         self::checkRequestMethod('GET');
-        $classes = Classes::getCurrentClasses();
+        $classes = Classes::getClasses();
+        if ($classes === false)
+          self::returnError();
+        else
+          self::returnPayload([
+            'classes' => $classes
+          ]);
+        break;
+
+      case 'getClassesInTime':
+        # self::checkRequestMethod('GET');
+        $body = self::getJSONBody();
+        if (!isset($body['time']))
+          self::returnError("Mandatory parameter time not set in POST request");
+
+        $classes = Classes::getClasses((int)$body['time']);
         if ($classes === false)
           self::returnError();
         else
