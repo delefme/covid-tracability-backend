@@ -60,4 +60,56 @@ class Classes {
 
     return $classes;
   }
+
+  public static function getClassesInSpaceToday(string $room) {
+    global $con;
+
+    $isSignedIn = Users::isSignedIn();
+    $sentence = 'SELECT c.id, c.calendar_name, c.room, c.begins, c.ends, c.calendar_name, s.id subject_id, s.friendly_name
+      '.($isSignedIn ? ', u_s.id user_subject_id' : '').',
+          CASE
+            WHEN c.begins > UNIX_TIMESTAMP() OR c.ends < UNIX_TIMESTAMP()
+              THEN 0
+              ELSE 1
+          END is_current
+        FROM classes c
+        LEFT OUTER JOIN subjects s
+          ON c.calendar_name = s.calendar_name
+        '.($isSignedIn ? 'LEFT OUTER JOIN user_subjects u_s
+          ON s.id = u_s.subject_id
+        ' : '').
+      'WHERE
+          ( (c.begins >= :begin_day AND c.begins <= :end_day) OR
+            (  c.ends >= :begin_day AND c.ends <= :end_day )    ) AND
+          c.room = :room'.($isSignedIn ? ' AND
+          (
+            u_s.user_id = :user_id OR
+            u_s.subject_id IS NULL
+          )': '').'
+        ORDER BY
+          s.id IS NULL,
+          c.begins DESC,
+          '.($isSignedIn ? 'u_s.subject_id IS NULL,
+          ' : '').'s.friendly_name ASC';
+    $query = $con->prepare($sentence);
+
+    $begin_day = strtotime("today", time());
+    $end_day   = strtotime("tomorrow", $begin_day) - 1;
+
+    $query_params = ['room' => $room, 'begin_day' => $begin_day, 'end_day' => $end_day];
+    if ($isSignedIn) $query_params['user_id'] = Users::getUserId();
+
+    if (!$query->execute($query_params)) return false;
+    $classes = $query->fetchAll(\PDO::FETCH_ASSOC);
+
+    foreach ($classes as &$class) {
+      if (!$isSignedIn)
+        $class['user_subject_id'] = null;
+
+      $class['user_selected'] = $class['user_subject_id'] !== null;
+    }
+
+    return $classes;
+  }
+
 }
