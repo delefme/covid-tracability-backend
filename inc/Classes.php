@@ -19,7 +19,7 @@ class Classes {
     $sentence = 'SELECT c.id, c.calendar_name, c.room, c.begins, c.ends, c.calendar_name, s.id subject_id, s.friendly_name
       '.($isSignedIn ? ', u_s.id user_subject_id' : '').',
           CASE
-            WHEN c.begins > UNIX_TIMESTAMP() OR c.ends < UNIX_TIMESTAMP()
+            WHEN c.begins > :unix_time OR c.ends < :unix_time
               THEN 0
               ELSE 1
           END is_current
@@ -43,16 +43,12 @@ class Classes {
           ' : '').'s.friendly_name ASC';
     $query = $con->prepare($sentence);
 
-    if(!$unix_time) {
-      $unix_time = time();
-    }
+    if (!$unix_time) $unix_time = time();
 
     $query_params = ['unix_time' => $unix_time];
-    if($isSignedIn) $query_params['user_id'] = Users::getUserId();
+    if ($isSignedIn) $query_params['user_id'] = Users::getUserId();
 
     if (!$query->execute($query_params)) return false;
-
-
     $classes = $query->fetchAll(\PDO::FETCH_ASSOC);
 
     foreach ($classes as &$class) {

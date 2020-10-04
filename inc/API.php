@@ -155,12 +155,12 @@ class API {
         break;
 
       case 'getClassesInTime':
-        # self::checkRequestMethod('GET');
-        $body = self::getJSONBody();
-        if (!isset($body['time']))
-          self::returnError("Mandatory parameter time not set in POST request");
+        self::checkRequestMethod('GET');
+        if (!$parts[1]) self::returnError("You must provide a unix time");
+        $unix_time = filter_var($parts[1], FILTER_VALIDATE_INT);
+        if (!$unix_time) self::returnError("Received parameter is not an integer");
 
-        $classes = Classes::getClasses((int)$body['time']);
+        $classes = Classes::getClasses($unix_time);
         if ($classes === false)
           self::returnError();
         else
