@@ -13,9 +13,6 @@ $conf['db']['database'] = '';
 $conf['db']['user'] = '';
 $conf['db']['password'] = '';
 
-// Enllaç al formulari de Google de l'FME
-$conf['formUrl'] = 'https://docs.google.com/forms/d/e/1FAIpQLSfT9o287VqLyhwR8LPdloAQWhuqCgA3NfdhgP5vb9_sVQHL-g/viewform';
-
 // Credencials de les APIs de Google (seguir pasos de
 // https://developers.google.com/identity/protocols/oauth2/web-server#creatingcred)
 $conf['goog'] = [];

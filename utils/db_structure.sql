@@ -32,7 +32,9 @@ CREATE TABLE classes (
   begins INT NOT NULL, -- UNIX timestamp de l'hora d'inici
   INDEX(begins),
   ends INT NOT NULL, -- UNIX timestamp de l'hora de fi
-  INDEX(ends)
+  INDEX(ends),
+  degree VARCHAR(50) NOT NULL,
+  INDEX(degree)
 );
 
 -- @TODO: Add form completion log table
