@@ -16,7 +16,7 @@ class Classes {
 
     $isSignedIn = Users::isSignedIn();
 
-    $sentence = 'SELECT c.id, c.calendar_name, c.room, c.begins, c.ends, c.calendar_name, s.id subject_id, s.friendly_name
+    $sentence = 'SELECT c.id, c.calendar_name, c.room, c.begins, c.ends, c.calendar_name, c.degree, s.id subject_id, s.friendly_name
       '.($isSignedIn ? ', u_s.id user_subject_id' : '').',
           CASE
             WHEN c.begins > :unix_time OR c.ends < :unix_time
