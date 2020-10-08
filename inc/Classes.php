@@ -19,7 +19,7 @@ class Classes {
     $sentence = 'SELECT c.id, c.calendar_name, c.room, c.begins, c.ends, c.calendar_name, c.degree, s.id subject_id, s.friendly_name
       '.($isSignedIn ? ', u_s.id user_subject_id' : '').',
           CASE
-            WHEN c.begins > :unix_time OR c.ends < :unix_time
+            WHEN c.begins > :unix_time OR c.ends <= :unix_time
               THEN 0
               ELSE 1
           END is_current
@@ -31,7 +31,7 @@ class Classes {
         ' : '').
         'WHERE
           c.begins - '.($unix_time ? self::CURRENT_MARGIN_BEGINS : self::INTIME_MARGIN_BEGINS).' <= :unix_time AND
-          c.ends + '.($unix_time ? self::CURRENT_MARGIN_ENDS: self::INTIME_MARGIN_ENDS).' >= :unix_time'.($isSignedIn ? ' AND
+          c.ends + '.($unix_time ? self::CURRENT_MARGIN_ENDS: self::INTIME_MARGIN_ENDS).' > :unix_time'.($isSignedIn ? ' AND
           (
             u_s.user_id = :user_id OR
             u_s.subject_id IS NULL
