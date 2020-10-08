@@ -37,11 +37,12 @@ class Classes {
             u_s.subject_id IS NULL
           )': '').'
         ORDER BY
-          s.id IS NULL,
-          is_current DESC,
-          '.($isSignedIn ? 'u_s.subject_id IS NULL,
-          ' : '').'s.friendly_name ASC,
-          c.room ASC';
+          s.id IS NULL, -- Mostrem primer les assignatures que reconeguem
+          is_current DESC, -- Mostrem primer les classes actuals
+          '.($isSignedIn ? 'u_s.subject_id IS NULL, -- Mostrem primer les classes seleccionades per l\'alumne
+          ' : '').'s.friendly_name ASC, -- Ordenem per ordre alfabètic el nom de l\'assignatura
+          c.calendar_name ASC, -- Ordenem per ordre alfabètic el nom de l\'assignatura del calendari
+          c.room ASC -- Ordenem per ordre alfabètic l\'aula';
     $query = $con->prepare($sentence);
 
     if ($unix_time === null) $unix_time = time();
