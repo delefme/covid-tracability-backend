@@ -40,7 +40,8 @@ class Classes {
           s.id IS NULL,
           is_current DESC,
           '.($isSignedIn ? 'u_s.subject_id IS NULL,
-          ' : '').'s.friendly_name ASC';
+          ' : '').'s.friendly_name ASC,
+          c.room ASC';
     $query = $con->prepare($sentence);
 
     if ($unix_time === null) $unix_time = time();
