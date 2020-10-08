@@ -11,7 +11,7 @@ class Classes {
   const INTIME_MARGIN_ENDS = 0*60;
 
 
-  public static function getClasses(int $unix_time = NULL) {
+  public static function getClasses(int $unix_time = null) {
     global $con;
 
     $isSignedIn = Users::isSignedIn();
@@ -30,8 +30,8 @@ class Classes {
           ON s.id = u_s.subject_id
         ' : '').
         'WHERE
-          c.begins - '.($unix_time ? self::CURRENT_MARGIN_BEGINS : self::INTIME_MARGIN_BEGINS).' <= :unix_time AND
-          c.ends + '.($unix_time ? self::CURRENT_MARGIN_ENDS: self::INTIME_MARGIN_ENDS).' > :unix_time'.($isSignedIn ? ' AND
+          c.begins - '.($unix_time === null ? self::CURRENT_MARGIN_BEGINS : self::INTIME_MARGIN_BEGINS).' <= :unix_time AND
+          c.ends + '.($unix_time === null ? self::CURRENT_MARGIN_ENDS: self::INTIME_MARGIN_ENDS).' > :unix_time'.($isSignedIn ? ' AND
           (
             u_s.user_id = :user_id OR
             u_s.subject_id IS NULL
@@ -43,7 +43,7 @@ class Classes {
           ' : '').'s.friendly_name ASC';
     $query = $con->prepare($sentence);
 
-    if (!$unix_time) $unix_time = time();
+    if ($unix_time === null) $unix_time = time();
 
     $query_params = ['unix_time' => $unix_time];
     if ($isSignedIn) $query_params['user_id'] = Users::getUserId();
