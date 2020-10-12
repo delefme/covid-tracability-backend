@@ -15,7 +15,7 @@ class Subjects {
   public static function addIsUserSelected(&$entries, $doIfSignedOut = true) {
     $isSignedIn = Users::isSignedIn();
 
-    if (!$doIfSignedOut) return;
+    if (!$doIfSignedOut && !$isSignedIn) return;
 
     foreach ($entries as &$entry) {
       if (!$isSignedIn)
