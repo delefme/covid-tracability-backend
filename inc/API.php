@@ -88,6 +88,21 @@ class API {
         ]);
         break;
 
+      case 'getStartupData':
+        self::checkRequestMethod('GET');
+
+        $payload = [];
+        $payload['user'] = [];
+        $payload['user']['signedIn'] = \DAFME\Covid\Users::isSignedIn();
+        $payload['user']['email'] = ($payload['user']['signedIn'] ? Users::getUserData('email') : null);
+
+        $auth = new Auth();
+        $payload['authUrl'] = $auth->getAuthUrl();
+        $payload['subjects'] = \DAFME\Covid\Subjects::getStartupSubjects();
+
+        self::returnPayload($payload);
+        break;
+
       case 'signOut':
         self::checkRequestMethod('POST');
         \DAFME\Covid\Users::signOut();

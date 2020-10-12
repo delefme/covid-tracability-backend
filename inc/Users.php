@@ -53,4 +53,15 @@ class Users {
     global $_SESSION;
     return (self::isSignedIn() ? $_SESSION['userId'] : -1);
   }
+
+  public static function getUserData(string $field) {
+    global $con;
+    if (!self::isSignedIn()) return false;
+    $userId = self::getUserId();
+
+    $query = $con->prepare('SELECT '.$field.' FROM users WHERE id = ?');
+    if (!$query->execute([$userId])) return false;
+
+    return $query->fetchColumn();
+  }
 }

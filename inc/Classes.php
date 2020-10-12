@@ -53,13 +53,7 @@ class Classes {
     if (!$query->execute($query_params)) return false;
     $classes = $query->fetchAll(\PDO::FETCH_ASSOC);
 
-    foreach ($classes as &$class) {
-      if (!$isSignedIn)
-        $class['user_subject_id'] = null;
-
-      $class['user_selected'] = $class['user_subject_id'] !== null;
-    }
-
+    Subjects::addIsUserSelected($classes);
     return $classes;
   }
 }

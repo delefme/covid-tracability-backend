@@ -12,6 +12,43 @@ class Subjects {
     return $query->fetchAll(\PDO::FETCH_ASSOC);
   }
 
+  public static function addIsUserSelected(&$entries, $doIfSignedOut = true) {
+    $isSignedIn = Users::isSignedIn();
+
+    if (!$doIfSignedOut) return;
+
+    foreach ($entries as &$entry) {
+      if (!$isSignedIn)
+        $entry['user_subject_id'] = null;
+
+      $entry['user_selected'] = $entry['user_subject_id'] !== null;
+    }
+  }
+
+  public static function getStartupSubjects() {
+    global $con;
+    $isSignedIn = Users::isSignedIn();
+
+    $query = $con->prepare('SELECT s.id, s.friendly_name'.($isSignedIn ? ', us.id user_subject_id' : '').'
+      FROM subjects s'.($isSignedIn ? '
+      LEFT JOIN user_subjects us
+        ON s.id = us.subject_id
+      WHERE
+        us.user_id = :user_id OR
+        us.user_id IS NULL' : '').'
+      ORDER BY s.friendly_name ASC');
+
+    $query_params = [
+      "user_id" => Users::getUserId()
+    ];
+
+    if (!$query->execute($query_params)) return false;
+    $subjects = $query->fetchAll(\PDO::FETCH_ASSOC);
+
+    self::addIsUserSelected($subjects, false);
+    return $subjects;
+  }
+
   public static function exists(int $subject): bool {
     global $con;
     $query = $con->prepare('SELECT id FROM subjects WHERE id = ?');
