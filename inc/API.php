@@ -184,6 +184,19 @@ class API {
           ]);
         break;
 
+      case 'getClassesInRoomToday':
+        self::checkRequestMethod('GET');
+        if (!$parts[1]) self::returnError("You must provide a room name");
+
+        $classes = Classes::getClassesInSpaceToday($parts[1]);
+        if ($classes === false)
+          self::returnError();
+        else
+          self::returnPayload([
+            'classes' => $classes
+          ]);
+        break;
+
       case 'setClassState':
         self::checkSignInStatus();
         // @TODO: Handle this method
